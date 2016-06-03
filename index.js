@@ -86,7 +86,7 @@ function loadLists() {
 
 		async.eachSeries(config.searches, function(item, done) {
 
-			console.log("A " + item.name + " lista betöltése fájlból...");
+			console.log("A(z) " + item.name.bold + " lista betöltése fájlból...");
 
 			var fName = path.join(dataDir, item.id + ".json");
 			if (fs.existsSync(fName)) {
