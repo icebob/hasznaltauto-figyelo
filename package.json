@@ -1,7 +1,7 @@
 {
   "name": "hasznaltauto-figyelo",
   "version": "1.0.0",
-  "description": "Új autó figyelő a hasznaltauto.hu oldalhoz",
+  "description": "Autó figyelő a hasznaltauto.hu oldalhoz",
   "main": "index.js",
   "scripts": {
   },
