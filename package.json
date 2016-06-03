@@ -1,0 +1,19 @@
+{
+  "name": "hasznaltauto-figyelo",
+  "version": "1.0.0",
+  "description": "Új autó figyelő a hasznaltauto.hu oldalhoz",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "Icebob",
+  "license": "MIT",
+  "dependencies": {
+    "async": "2.0.0-rc.5",
+    "cheerio": "0.20.0",
+    "lodash": "4.13.1",
+    "mailgun": "0.5.0",
+    "mkdirp": "0.5.1",
+    "request": "2.72.0",
+    "scrape-it": "3.1.1"
+  }
+}
