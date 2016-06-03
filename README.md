@@ -59,8 +59,8 @@ Beállítások leírása:
 - **time**: a frissítési idő percekben. Ennyi időnként fut le a figyelés
 - **dataDir**: munkakönyvtár. Célszerű nem megváltoztatni
 - **searches**: a keresési linkeket tartalmazó tömb. Több elemet is tartalmazhat
-  - **id**: keresési azonosítója. Csak latin betűket és számokat tartalmazhat szóköz nélkül. Egy egyszerű név, a program a fájlnévként használja ezt az azonosítót
-  - **name**: parancssorban megjelenített név a kereséshez
+  - **id**: keresési azonosítója. Csak latin betűket és számokat tartalmazhat szóköz nélkül. Egy egyszerű név, a program a fájlnévként használja ezt az azonosítót. Lehet fantázianév, csak legyen **egyedi**
+  - **name**: a keresés beszédes fantázia neve (a parancssorban jelenik meg)
   - **url**: a keresés linkje. A hasznaltauto.hu oldalon összeállított kereséshez tartozó URL.
 - **telepulesID** - a távolságszámításhoz használt település azonosító (hasznaltauto.hu oldalon lévő cookie-ból nyerhető id az adat)
 - **cookie** - a kereséshez használt egyéb cookie mezők. Célszerű nem változtatni. 
