@@ -6,7 +6,7 @@ A telepítéshez vagy le kell klónozni ezt a tárolót
 ```
 git clone https://github.com/icebob/hasznaltauto-figyelo.git
 ```
-vagy letölteni [ZIP csomagban](https://github.com/icebob/hasznaltauto-figyelo/archive/master.zip).
+vagy letölteni [ZIP-ben](https://github.com/icebob/hasznaltauto-figyelo/archive/master.zip) és kicsomagolni.
 
 Az alkalmazás NodeJS alapú, így szükséges [NodeJS telepítése](https://nodejs.org/en/download/package-manager/).
 
