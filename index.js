@@ -6,6 +6,13 @@ var mkdir = require("mkdirp");
 var scrape = require("scrape-it");
 var cheerio = require("cheerio");
 var request = require("request");
+var colors = require("colors");
+
+if (!fs.existsSync("./config.js")) {
+	console.error(colors.bgRed("A config.js fájl nem található. Nevezze át a mappában található " + colors.bold("config.example.js") + " fájlt " + colors.bold("config.js") + " fájlra és módosítsa a tartalmát. Adja meg a keresési linkeket, illetve az e-mail küldéshez szükséges adatokat."));
+	process.exit(1);
+	return;
+}
 
 var config = require("./config");
 
@@ -110,7 +117,7 @@ function doWork() {
 
 		async.eachSeries(config.searches, function(item, done) {
 
-			console.log(item.name + " keresés figyelése...");
+			console.log(item.name.bold + " keresés figyelése...");
 
 			listCars(item.url, function(err, list) {
 
@@ -130,8 +137,17 @@ function doWork() {
 					}
 
 					if (!oldItem) {
-						console.log("Új autót találtam!");
-						console.log(car);
+						console.log("Új autót találtam!".bgGreen.white);
+
+						console.log(
+							car.title.bold + "\n" +
+							car.description + "\n" +
+							"Ár: " + car.price + "\n" +
+							"Távolság: " + car.distance + "\n" +
+							"Link: " + car.link + "\n"
+						);
+
+						//console.log(car);
 						newCars.push(car);
 					}
 				});
@@ -172,20 +188,21 @@ function doWork() {
 				}
 			}
 
-			console.log("Kész. " + newCars.length + " új autót találtam! Várakozás a következő frissítésre...\n");
-
+			if (newCars.length > 0)
+				console.log(colors.white(colors.bold(newCars.length) + " új autót találtam! Várakozás a következő frissítésre...\n"));
+			else
+				console.log(colors.yellow("Nem találtam új autót. Várakozás a következő frissítésre...\n"));
 		});
 	}
 
 }
 
 
-
 setInterval(function() {
 	doWork();
 }, (config.time || 5) * 60 * 1000);
 
-console.log("Figyelő indítása... Frissítési idő: " + (config.time || 10) + " perc");
+console.log(colors.bold("\n\nFigyelő indítása... Frissítési idő: " + (config.time || 10) + " perc"));
 console.log("------------------\n");
 
 loadLists();
