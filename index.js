@@ -17,7 +17,7 @@ if (!fs.existsSync("./config.js")) {
 var config = require("./config");
 
 var Mailgun = require('mailgun').Mailgun;
-var mg = new Mailgun(config.email && config.mailgunKey ? config.mailgunKey : null);
+var mg = new Mailgun(config.email && config.email.mailgunKey ? config.email.mailgunKey : null);
 
 var dataDir = path.join(__dirname, config.dataDir || "./data"); 
 mkdir(dataDir);
@@ -181,10 +181,8 @@ function doWork() {
 						if (err)
 							return console.error("Email küldési hiba!", err);
 
-						console.log("Email kiküldve az alábbi címekre: " + config.email.recipients.join(", "));
+						console.log("Email kiküldve az alábbi címekre: " + config.email.recipients.join(", ").bold);
 					});
-					console.log(subject);
-					console.log(txt.join("\n"));
 				}
 			}
 
