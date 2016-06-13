@@ -18,6 +18,8 @@ module.exports = {
 	telepulesID: 1843,
 	cookie: 'cookie=cookie; talalatokszama=100; results=100;',
 
+	slackWebHook: "",
+
 	email: {
 		mailgunKey: "<PASTE HERE YOUR API KEY FROM MAILGUN.COM>",
 		subject: "{0} új használtautó!",

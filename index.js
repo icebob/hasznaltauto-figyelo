@@ -172,6 +172,30 @@ function doWork() {
 
 					txt.push("---------------------");
 					txt.push(" ");
+
+					if (config.slackWebHook) {
+
+						request({
+							method: "POST",
+							url: config.slackWebHook,
+
+							json: {
+								text: car.title + "\n" + 
+									  car.description + "\n" + 
+									  "Ár: " + car.price + "\n" + 
+									  "Link: " + car.link + "\n" + 
+									  "Távolság: " + car.distance + "\n" + 
+									  "ID: " + car.id
+							}
+						}, function(err, response, body ) {
+							if (err) {
+								return console.error(err);
+							}					
+
+							console.log("Slack-re továbbítva.");
+						});
+					}
+
 				});
 
 				if (config.email && config.email.recipients && config.email.recipients.length > 0) {
