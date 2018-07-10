@@ -16,8 +16,10 @@ if (!fs.existsSync("./config.js")) {
 
 var config = require("./config");
 
-var Mailgun = require('mailgun').Mailgun;
-var mg = new Mailgun(config.email && config.email.mailgunKey ? config.email.mailgunKey : null);
+var mg = require('mailgun-js')({
+	apiKey: config.email.mailgunKey ? config.email.mailgunKey : null, 
+	domain: config.email.mailgunDomain ? config.email.mailgunDomain : null
+});
 
 var dataDir = path.join(__dirname, config.dataDir || "./data"); 
 mkdir(dataDir);
@@ -38,38 +40,39 @@ function listCars(url, done) {
 	request({
 		url: url,
 		headers: {
-			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36',
+			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
 			'Cookie': cookie
 		}
 	}, function(err, response, body ) {
 		if (err) {
 			return done(err);
 		}
+		//console.log(body);
 
 		$ = cheerio.load(body);
 		var page = scrape.scrapeHTML($, {
 			cars: {
-				listItem: ".talalati_lista",
+				listItem: ".row.talalati-sor",
 				data: {
 					id: {
-						selector: ".talalati_lista_head a",
+						selector: ".cim-kontener h3 a",
 						attr: "href",
 						convert: function(s) {
 							return s.split("-").pop();
 						}
 					},
 					link: {
-						selector: ".talalati_lista_head a",
+						selector: ".cim-kontener h3 a",
 						attr: "href"
 					},
-					title: ".talalati_lista_head a",
-					description: ".talalati_lista_infosor",
+					title: ".cim-kontener h3 a",
+					description: ".talalatisor-infokontener .hidden-xs",
 					image: {
-						selector: ".talalati_lista_kep img",
+						selector: ".talalatisor-kep img",
 						attr: "src"
 					},
-					price: ".talalati_lista_vetelar strong",
-					distance: ".tavolsag_talalati"
+					price: ".vetelar",
+					distance: ".talalatisor-info tavolsaginfo .tavolsag_talalati"
 				}
 			}
 		});
@@ -124,7 +127,7 @@ function doWork() {
 				if (err)
 					return console.error(err);
 
-				fs.writeFile(path.join(dataDir, item.id + ".json"), JSON.stringify(list, null, 4));
+				fs.writeFileSync(path.join(dataDir, item.id + ".json"), JSON.stringify(list, null, 4));
 
 				// Diff
 				list.cars.forEach(function(car) {
@@ -199,9 +202,13 @@ function doWork() {
 				});
 
 				if (config.email && config.email.recipients && config.email.recipients.length > 0) {
-					var subject = format(config.email.subject || "{0} új használtautó!", newCars.length);
-
-					mg.sendText("hasznaltauto-figyelo@mail.com", config.email.recipients, subject, txt.join("\r\n"), function(err) {
+					const data = {
+						from: "hasznaltauto-figyelo@mail.com",
+						to: config.email.recipients,
+						subject: format(config.email.subject || "{0} új használtautó!", newCars.length),
+						text: txt.join("\r\n")
+					};
+					mg.messages().send(data, function (err, body) {
 						if (err)
 							return console.error("Email küldési hiba!", err);
 
