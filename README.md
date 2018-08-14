@@ -69,5 +69,11 @@ Beállítások leírása:
   - **subject** - a levél fejléce. A `{0}` rész kicserélődik a talált új autók számára
   - **recipients** - a címzettek e-mail címe. Több is megadható
 
+## Futtatás dockerben
+
+A docker konténer létrehozható a `docker build . -t hasznaltauto-figyelo`
+paranccsal.  Ezután a következő paranccsal futtatható: `docker run -it
+-v<config.js utvonala>:/app/config.js hasznaltauto-figyelo`.
+
 ## License
 [MIT license](https://tldrlegal.com/license/mit-license).
