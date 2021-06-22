@@ -1,7 +1,7 @@
 FROM node:alpine
 
 RUN apk add --no-cache git npm &&\
-	git clone https://github.com/ecklm/hasznaltauto-figyelo.git app &&\
+	git clone https://github.com/icebob/hasznaltauto-figyelo.git app &&\
 	cd app &&\
 	npm install
 
