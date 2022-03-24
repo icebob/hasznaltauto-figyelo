@@ -1,0 +1,10 @@
+<div>
+	<div style="margin-bottom: 0.5em;"><b><a href="{{link}}">{{title}}<a></b></div>
+	<a href="{{link}}" style="float: left; margin-right: 0.5em;"><img src="{{image}}"/></a>
+	<div><b>Ár: </b>{{price}}</div>
+	<div><b>Távolság: </b>{{distance}}</div>
+	<div><b>Infó: </b>{{extraData}}</div>
+	<div><b>ID: </b>{{id}}</div>
+	<div>&nbsp;</div>
+</div>
+<hr style="margin-top: 1em; padding-top: 0.5em; border: 0; border-top: 1px solid #aaa;" />

@@ -15,6 +15,7 @@
     "lodash": "4.17.10",
     "mailgun-js": "0.20.0",
     "mkdirp": "0.5.1",
+    "mustache": "^4.2.0",
     "request": "2.87.0",
     "scrape-it": "3.1.1"
   }

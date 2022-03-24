@@ -7,11 +7,17 @@ var scrape = require("scrape-it");
 var cheerio = require("cheerio");
 var request = require("request");
 var colors = require("colors");
+var Mustache = require('mustache');
 
 if (!fs.existsSync("./config.js")) {
 	console.error(colors.bgRed("A config.js fájl nem található. Nevezze át a mappában található " + colors.bold("config.example.js") + " fájlt " + colors.bold("config.js") + " fájlra és módosítsa a tartalmát. Adja meg a keresési linkeket, illetve az e-mail küldéshez szükséges adatokat."));
 	process.exit(1);
 	return;
+}
+
+var html_template;
+if (fs.existsSync("./html.template")) {
+	html_template = fs.readFileSync("./html.template", "utf8");
 }
 
 var config = require("./config");
@@ -72,6 +78,7 @@ function listCars(url, done) {
 						attr: "src"
 					},
 					price: ".col-sm-9.hidden-xs .vetelar",
+					extraData: ".talalatisor-info.adatok .info",
 					distance: ".talalatisor-info tavolsaginfo .tavolsag_talalati"
 				}
 			}
@@ -164,13 +171,20 @@ function doWork() {
 			if (newCars.length > 0) {
 
 				var txt = [];
+				var html = [];
 
 				newCars.forEach(function(car) {
+					if (html_template) {
+						html.push(Mustache.render(html_template, car));
+					}
+					
 					txt.push(car.title);
 					txt.push(car.description);
 					txt.push("Ár: " + car.price);
 					txt.push("Link: " + car.link);
 					txt.push("Távolság: " + car.distance);
+					txt.push("Infó: " + car.extraData);
+					txt.push("Fotó: " + car.image);
 					txt.push("ID: " + car.id);
 
 					txt.push("---------------------");
@@ -206,7 +220,8 @@ function doWork() {
 						from: "hasznaltauto-figyelo@mail.com",
 						to: config.email.recipients,
 						subject: format(config.email.subject || "{0} új használtautó!", newCars.length),
-						text: txt.join("\r\n")
+						text: txt.join("\r\n"),
+						html: html_template ? html.join("\r\n") : undefined
 					};
 					mg.messages().send(data, function (err, body) {
 						if (err)
