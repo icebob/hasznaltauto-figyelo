@@ -46,6 +46,7 @@ module.exports = {
 
 	email: {
 		mailgunKey: "<PASTE HERE YOUR API KEY FROM MAILGUN.COM>",
+		mailgunDomain: "<PASTE HERE YOUR MAILGUN.COM SANDBOX DOMAIN OR CUSTOM DOMAIN>",
 		subject: "{0} új használtautó!",
 		recipients: [
 			"gipsz.jakab@company.com"
