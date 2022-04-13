@@ -64,7 +64,7 @@ function listCars(url, done) {
 						selector: ".cim-kontener h3 a",
 						attr: "href",
 						convert: function(s) {
-							return s.split("-").pop();
+							return s.split("?")[0].split("-").pop();
 						}
 					},
 					link: {
