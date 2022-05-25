@@ -1,9 +1,11 @@
 FROM node:alpine
 
-ADD . app
+ADD html.template index.js package.json package-lock.json app/
+
 RUN apk add --no-cache npm && \
 	cd app && \
-	npm install
+	npm ci && \
+    npm cache clean --force
 
 WORKDIR /app
 
