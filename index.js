@@ -22,12 +22,16 @@ if (fs.existsSync("./html.template")) {
 
 var config = require("./config");
 
-var mg = require('mailgun-js')({
-	apiKey: config.email.mailgunKey ? config.email.mailgunKey : null, 
-	domain: config.email.mailgunDomain ? config.email.mailgunDomain : null
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const mailgun = new Mailgun(formData);
+var mg = mailgun.client({
+	username: 'api',
+	key: config.email.mailgunKey ? config.email.mailgunKey : null,
+	url: config.email.mailgunURL ? config.email.mailgunURL : null
 });
 
-var dataDir = path.join(__dirname, config.dataDir || "./data"); 
+var dataDir = path.join(__dirname, config.dataDir || "./data");
 mkdir(dataDir);
 
 var format = function(format) {
@@ -37,10 +41,41 @@ var format = function(format) {
 	return format;
 };
 
+/**
+ * parse all pages in loop until empty page found
+ *
+ * @param url
+ * @param page
+ * @param ret
+ * @param resolve
+ */
+function listCarsForAllPages(url, page, ret, resolve) {
+	if (page > 1) {
+		url += '/page' + page
+	}
+
+	listCars(url, function(err, list) {
+		if (err !== null) {
+			return resolve(err)
+		}
+		// utolsó lap, nincs találat
+		if (list.cars.length === 0) {
+			return resolve(null, ret)
+		}
+
+		list.cars.forEach(function(car) {
+			ret.cars.push(car)
+		})
+
+		// next page - recursion
+		listCarsForAllPages(url, page + 1, ret, resolve)
+	})
+}
+
 function listCars(url, done) {
 
 	var cookie = config.cookie || '';
-	if (config.telepulesID != null) 
+	if (config.telepulesID != null)
 		cookie += "telepules_id_user=" + config.telepulesID + "; telepules_saved=1; visitor_telepules=" + config.telepulesID + ";";
 
 	request({
@@ -49,7 +84,7 @@ function listCars(url, done) {
 			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
 			'Cookie': cookie
 		}
-	}, function(err, response, body ) {
+	}, function (err, response, body) {
 		if (err) {
 			return done(err);
 		}
@@ -112,9 +147,9 @@ function loadLists() {
 
 					done();
 				});
-			}
-			else
+			} else {
 				done();
+			}
 		});
 	}
 }
@@ -130,7 +165,12 @@ function doWork() {
 
 			console.log(item.name.bold + " keresés figyelése...");
 
-			listCars(item.url, function(err, list) {
+			// for recursion
+			const ret = {
+				cars: [],
+			}
+
+			listCarsForAllPages(item.url, 1, ret, function(err, list) {
 
 				if (err)
 					return console.error(err);
@@ -178,7 +218,7 @@ function doWork() {
 					if (html_template) {
 						html.push(Mustache.render(html_template, car));
 					}
-					
+
 					txt.push(car.title);
 					txt.push(car.description);
 					txt.push("Ár: " + car.price);
@@ -198,17 +238,17 @@ function doWork() {
 							url: config.slackWebHook,
 
 							json: {
-								text: car.title + "\n" + 
-									  car.description + "\n" + 
-									  "Ár: " + car.price + "\n" + 
-									  "Link: " + car.link + "\n" + 
-									  "Távolság: " + car.distance + "\n" + 
+								text: car.title + "\n" +
+									  car.description + "\n" +
+									  "Ár: " + car.price + "\n" +
+									  "Link: " + car.link + "\n" +
+									  "Távolság: " + car.distance + "\n" +
 									  "ID: " + car.id
 							}
 						}, function(err, response, body ) {
 							if (err) {
 								return console.error(err);
-							}					
+							}
 
 							console.log("Slack-re továbbítva.");
 						});
@@ -224,12 +264,13 @@ function doWork() {
 						text: txt.join("\r\n"),
 						html: html_template ? html.join("\r\n") : undefined
 					};
-					mg.messages().send(data, function (err, body) {
-						if (err)
+					mg.messages.create(config.email.mailgunDomain ? config.email.mailgunDomain : null, data)
+						.then(() => {
+							console.log("Email kiküldve az alábbi címekre: " + config.email.recipients.join(", ").bold);
+						})
+						.catch((err) => {
 							return console.error("Email küldési hiba!", err);
-
-						console.log("Email kiküldve az alábbi címekre: " + config.email.recipients.join(", ").bold);
-					});
+						})
 				}
 			}
 

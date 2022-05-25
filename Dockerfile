@@ -1,9 +1,11 @@
 FROM node:alpine
 
-RUN apk add --no-cache git npm &&\
-	git clone https://github.com/icebob/hasznaltauto-figyelo.git app &&\
-	cd app &&\
-	npm install
+ADD html.template index.js package.json package-lock.json app/
+
+RUN apk add --no-cache npm && \
+	cd app && \
+	npm ci && \
+    npm cache clean --force
 
 WORKDIR /app
 

@@ -73,7 +73,7 @@ Beállítások leírása:
 ## Futtatás dockerben
 
 A docker konténer létrehozható a `docker build . -t hasznaltauto-figyelo`
-paranccsal.  Ezután a következő paranccsal futtatható: `docker run -it
+paranccsal.  Ezután a következő paranccsal futtatható: `docker run --init -it
 -v<config.js utvonala>:/app/config.js hasznaltauto-figyelo`.
 
 ## License
