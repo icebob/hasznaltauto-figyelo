@@ -113,7 +113,7 @@ function listCars(url, done) {
 						selector: ".talalatisor-kep img",
 						attr: "src"
 					},
-					price: ".col-sm-9.hidden-xs .vetelar",
+					price: ".price-fields-desktop .pricefield-primary",
 					extraData: ".talalatisor-info.adatok .info",
 					distance: ".talalatisor-info tavolsaginfo .tavolsag_talalati"
 				}
