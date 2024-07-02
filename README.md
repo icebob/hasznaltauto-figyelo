@@ -55,7 +55,7 @@ module.exports = {
 }
 ```
 
-Beállítások leírása:
+### Beállítások leírása:
 
 - **time**: a frissítési idő percekben. Ennyi időnként fut le a figyelés
 - **dataDir**: munkakönyvtár. Célszerű nem megváltoztatni
@@ -67,6 +67,7 @@ Beállítások leírása:
 - **cookie** - a kereséshez használt egyéb cookie mezők. Célszerű nem változtatni. 
 - **email** - e-mail értesítéshez tartozó beállítások
   - **mailgunKey** - a program az email küldéséhez a mailgun ingyenes szolgáltatását használja. Ehhez az oldalon be kell regisztrálni az ingyenes csomagra és az ott kapott `Secret API key`-t ide bemásolni
+  - **mailgunDomain** - a mailgun account-hoz tartozó domain név, pl: `sandbox12345.mailgun.org`
   - **mailgunURL** - abban az esetben ha EU régiós az account akkor ide meg kell adni, hogy `https://api.eu.mailgun.net`
   - **subject** - a levél fejléce. A `{0}` rész kicserélődik a talált új autók számára
   - **recipients** - a címzettek e-mail címe. Több is megadható
