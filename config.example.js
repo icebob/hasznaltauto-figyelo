@@ -20,6 +20,15 @@ module.exports = {
 
 	slackWebHook: "",
 
+	scrapingBee: {
+		apiKey: "<PASTE HERE YOUR API KEY FROM SCRAPINGBEE.COM>",
+		params: {
+			render_js: true,
+			premium_proxy: true,
+			// stealth_proxy: true,
+		}
+	},
+
 	email: {
 		mailgunKey: "<PASTE HERE YOUR API KEY FROM MAILGUN.COM>",
 		mailgunDomain: "<PASTE HERE YOUR MAILGUN SANDBOX DOMAIN>",
