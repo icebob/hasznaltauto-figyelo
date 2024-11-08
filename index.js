@@ -149,6 +149,10 @@ function listCars(url, done) {
     })
     .catch((err) => {
       if (err.response && err.response.data) {
+        if (err.response.status == 404) {
+          return done(null, { cars: [] });
+        }
+        
         var decoder = new TextDecoder();
         var text = decoder.decode(err.response.data);
         console.error(text);

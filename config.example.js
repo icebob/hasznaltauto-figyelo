@@ -25,7 +25,8 @@ module.exports = {
 		params: {
 			render_js: true,
 			premium_proxy: true,
-			// stealth_proxy: true,
+			stealth_proxy: true,
+			wait: 5000
 		}
 	},
 
