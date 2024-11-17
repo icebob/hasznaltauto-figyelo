@@ -153,9 +153,9 @@ function listCars(url, done) {
           return done(null, { cars: [] });
         }
         
-        var decoder = new TextDecoder();
-        var text = decoder.decode(err.response.data);
-        console.error(text);
+        // var decoder = new TextDecoder();
+        // var text = decoder.decode(err.response.data);
+        // console.error(text);
       }
 
       return done(err);
