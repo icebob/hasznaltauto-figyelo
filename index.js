@@ -111,7 +111,7 @@ function listCars(url, done) {
     .then((response) => {
       var decoder = new TextDecoder();
       var body = decoder.decode(response.data);
-      console.log(body);
+      // console.log(body);
 
       $ = cheerio.load(body);
       var page = scrape.scrapeHTML($, {
