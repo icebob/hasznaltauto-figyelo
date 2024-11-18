@@ -9,6 +9,7 @@ var request = require("request");
 var colors = require("colors");
 var Mustache = require("mustache");
 const scrapingbee = require("scrapingbee");
+const zr = require("zenrows");
 
 if (!fs.existsSync("./config.js")) {
   console.error(
@@ -84,21 +85,40 @@ function listCarsForAllPages(url, page, ret, resolve) {
 function get({ url, headers }) {
   if (config.scrapingBee?.apiKey) {
     const client = new scrapingbee.ScrapingBeeClient(config.scrapingBee.apiKey);
-    return client.get({
-      url: url,
-      params: config.scrapingBee.params,
-      headers,
-    }).then(response => {
-      var decoder = new TextDecoder();
-      var body = decoder.decode(response.data);
-      return body;
-    })
+    return client
+      .get({
+        url: url,
+        params: config.scrapingBee.params,
+        headers,
+      })
+      .then((response) => {
+        var decoder = new TextDecoder();
+        var body = decoder.decode(response.data);
+        return body;
+      });
+  }
+  else if (config.zenrows?.apiKey) {
+    const client = new zr.ZenRows(config.zenrows.apiKey);
+    return client
+      .get(
+        url,
+        Object.assign({ custom_headers: true }, config.zenrows.params),
+        { headers }
+      )
+      .then((response) => {
+        if (response.status >= 400) {
+          console.error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.text();
+      });
   } else {
     return new Promise((resolve) => {
       request(
         {
           url,
           headers,
+          strictSSL: false,
+          rejectUnauthorized: false,
         },
         function (err, response, body) {
           if (err) {

@@ -30,6 +30,15 @@ module.exports = {
 		}
 	},
 
+	zenrows: {
+		apiKey: "<PASTE HERE YOUR API KEY FROM APP.ZENROWS.COM>",
+		params: {
+			js_render: true,
+			premium_proxy: true,
+			proxy_country: "hu"
+		}
+	},
+
 	email: {
 		mailgunKey: "<PASTE HERE YOUR API KEY FROM MAILGUN.COM>",
 		mailgunDomain: "<PASTE HERE YOUR MAILGUN SANDBOX DOMAIN>",
