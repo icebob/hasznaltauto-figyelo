@@ -40,3 +40,6 @@ config.js
 
 # Adat könyvtár
 data
+
+# Test file
+response.html

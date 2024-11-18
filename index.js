@@ -82,12 +82,38 @@ function listCarsForAllPages(url, page, ret, resolve) {
 }
 
 function get({ url, headers }) {
-  const client = new scrapingbee.ScrapingBeeClient(config.scrapingBee.apiKey);
-  return client.get({
-    url: url,
-    params: config.scrapingBee.params,
-    headers,
-  });
+  if (config.scrapingBee?.apiKey) {
+    const client = new scrapingbee.ScrapingBeeClient(config.scrapingBee.apiKey);
+    return client.get({
+      url: url,
+      params: config.scrapingBee.params,
+      headers,
+    }).then(response => {
+      var decoder = new TextDecoder();
+      var body = decoder.decode(response.data);
+      return body;
+    })
+  } else {
+    return new Promise((resolve) => {
+      request(
+        {
+          url,
+          headers,
+        },
+        function (err, response, body) {
+          if (err) {
+            console.error(err.message);
+          } else if (response.statusCode >= 400) {
+            console.error(
+              `HTTP ${response.statusCode}: ${response.statusMessage}`
+            );
+          }
+
+          resolve(body);
+        }
+      );
+    });
+  }
 }
 
 function listCars(url, done) {
@@ -103,15 +129,14 @@ function listCars(url, done) {
   get({
     url: url,
     headers: {
-      //   "User-Agent":
-      //     "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
       Cookie: cookie,
     },
   })
-    .then((response) => {
-      var decoder = new TextDecoder();
-      var body = decoder.decode(response.data);
-      // console.log(body);
+    .then((body) => {
+      //console.log(body);
+      fs.writeFileSync("response.html", body);
 
       $ = cheerio.load(body);
       var page = scrape.scrapeHTML($, {
@@ -152,7 +177,7 @@ function listCars(url, done) {
         if (err.response.status == 404) {
           return done(null, { cars: [] });
         }
-        
+
         // var decoder = new TextDecoder();
         // var text = decoder.decode(err.response.data);
         // console.error(text);
