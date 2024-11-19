@@ -83,7 +83,7 @@ function listCarsForAllPages(url, page, ret, resolve) {
 }
 
 function get({ url, headers }) {
-  if (config.scrapingBee?.apiKey) {
+  if (config.scrapingBee && config.scrapingBee.apiKey) {
     const client = new scrapingbee.ScrapingBeeClient(config.scrapingBee.apiKey);
     return client
       .get({
@@ -97,7 +97,7 @@ function get({ url, headers }) {
         return body;
       });
   }
-  else if (config.zenrows?.apiKey) {
+  else if (config.zenrows && config.zenrows.apiKey) {
     const client = new zr.ZenRows(config.zenrows.apiKey);
     return client
       .get(
